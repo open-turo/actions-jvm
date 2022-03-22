@@ -1,0 +1,36 @@
+name: "jvm Test"
+description: "Executes jvm unit tests within repository reporting test coverage metrics"
+inputs:
+  checkout-repo:
+    required: false
+    description: "Perform checkout as first step of action"
+    default: "true"
+  github-token:
+    required: true
+    description: "GitHub token that can checkout the repository. e.g. 'secrets.GITHUB_TOKEN'"
+  artifactory-username:
+    required: true
+    description: "Username to use for Artifactory access"
+  artifactory-auth-token:
+    required: true
+    description: "Authentication token to use with username for Artifactory access"
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      if: inputs.checkout-repo
+      with:
+        fetch-depth: 0
+    - name: Sdkman
+      shell: bash
+      run: sdk env install
+    - name: Test
+      env:
+        JAVA_HOME: ${{ env.JAVA_HOME }}
+      shell: bash
+      run: |
+        sdk current
+        sdk env
+        sdk current
+        ./gradlew test -PartifactoryUsername=${{ inputs.artifactory-username }} -PartifactoryAuthToken=${{ inputs.artifactory-auth-token }}

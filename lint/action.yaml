@@ -1,0 +1,33 @@
+name: "jvm Lint"
+description: "Lints jvm repository"
+inputs:
+  checkout-repo:
+    required: false
+    description: "Perform checkout as first step of action"
+    default: "true"
+  github-token:
+    required: true
+    description: "GitHub token that can checkout the repository. e.g. 'secrets.GITHUB_TOKEN'"
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      if: inputs.checkout-repo
+      with:
+        fetch-depth: 0
+    - name: Setup python
+      uses: actions/setup-python@v2
+    - name: Authorize
+      uses: open-turo/action-git-auth@v1
+      with:
+        token: ${{ inputs.github-token }}
+    - name: File changes
+      id: file_changes
+      uses: trilom/file-changes-action@v1
+      with:
+        output: " "
+    - name: Pre-commit
+      uses: open-turo/action-pre-commit@v1
+      with:
+        extra_args: --files ${{ steps.file_changes.outputs.files }}
