@@ -11,23 +11,11 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
       if: inputs.checkout-repo
       with:
         fetch-depth: 0
-    - name: Setup python
-      uses: actions/setup-python@v2
-    - name: Authorize
-      uses: open-turo/action-git-auth@v1
-      with:
-        token: ${{ inputs.github-token }}
-    - name: File changes
-      id: file_changes
-      uses: trilom/file-changes-action@v1
-      with:
-        output: " "
-    - name: Pre-commit
-      uses: open-turo/action-pre-commit@v1
-      with:
-        extra_args: --files ${{ steps.file_changes.outputs.files }}
+    - uses: open-turo/action-pre-commit@v1
+    - if: hashFiles('script/lint') != ''
+      shell: bash
+      run: script/lint

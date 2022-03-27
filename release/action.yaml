@@ -1,5 +1,5 @@
-name: "JVM Release & Publish"
-description: "Publish a new release of the project"
+name: "GitHub Action Release & Publish"
+description: "Publish a new release of the Action - adds a new major tag"
 inputs:
   checkout-repo:
     required: false
@@ -8,61 +8,34 @@ inputs:
   github-token:
     required: true
     description: "GitHub token that can checkout the repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN'"
-  docker-hub-username:
-    required: true
-    description: "Username that can access docker hub"
-  docker-hub-password:
-    required: true
-    description: "Password for username that can access docker hub"
-  docker-hub-repository:
-    required: true
-    description: "Organization/repository within docker hub"
-  docker-hub-image-name:
-    required: true
-    description: "Image name within org/repository within docker hub"
-  docker-context:
+  dry-run:
     required: false
-    description: "The directory for docker context"
-    default: .
-
+    description: "Whether to run semantic release in `dry-run` mode. It will override the dryRun attribute in your configuration file"
+  extra-plugins:
+    required: false
+    description: "Extra plugins for pre-install. You can also specify specifying version range for the extra plugins if you prefer."
 outputs:
-  version:
-    description: "Version of the project"
-    value: ${{ steps.release.outputs.version }}
+  new-release-published:
+    description: "Whether a new release was published"
+    value: ${{ steps.release.outputs.new_release_published }}
+  new-release-version:
+    description: "Version of the new release"
+    value: ${{ steps.release.outputs.new_release_version }}
+  new-release-major-version:
+    description: "Major version of the new release"
+    value: ${{ steps.release.outputs.release-major }}
 runs:
-  using: "composite"
+  using: composite
   steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
       if: inputs.checkout-repo
       with:
         fetch-depth: 0
-    - name: Authorize
-      uses: open-turo/action-git-auth@v1
+    - name: Semantic Release
+      id: release
+      uses: cycjimmy/semantic-release-action@v2
       with:
-        token: ${{ inputs.github-token }}
-    - name: Login to docker hub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ inputs.docker-hub-username }}
-        password: ${{ inputs.docker-hub-password }}
-    - name: Docker meta
-      id: meta
-      uses: docker/metadata-action@v3
-      with:
-        images: ${{ inputs.docker-hub-repository }}/${{ inputs.docker-hub-image-name }}
-        tags: |
-          type=ref,event=branch
-          type=ref,event=pr
-          type=semver,pattern={{version}}
-          type=sha
-    - name: Build and push
-      uses: docker/build-push-action@v2
-      with:
-        context: ${{ inputs.docker-context }}
-        build-args: |
-          GIT_COMMIT=${GITHUB_SHA}
-          GITHUB_TOKEN=${{ inputs.github-token }}
-        push: false
-        tags: ${{ steps.meta.output.tags }}
-        labels: ${{ steps.meta.output.labels }}
+        dry_run: ${{ inputs.dry-run }}
+        extra_plugins: ${{ inputs.extra-plugins }}
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}

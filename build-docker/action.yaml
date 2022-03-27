@@ -1,0 +1,68 @@
+name: "Docker build & push"
+description: "Publish a new release of the project"
+inputs:
+  checkout-repo:
+    required: false
+    description: "Perform checkout as first step of action"
+    default: "true"
+  github-token:
+    required: true
+    description: "GitHub token that can checkout the repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN'"
+  docker-hub-username:
+    required: true
+    description: "Username that can access docker hub"
+  docker-hub-password:
+    required: true
+    description: "Password for username that can access docker hub"
+  docker-hub-repository:
+    required: true
+    description: "Organization/repository within docker hub"
+  docker-hub-image-name:
+    required: true
+    description: "Image name within org/repository within docker hub"
+  docker-context:
+    required: false
+    description: "The directory for docker context"
+    default: .
+
+outputs:
+  version:
+    description: "Version of the project"
+    value: ${{ steps.release.outputs.version }}
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      if: inputs.checkout-repo
+      with:
+        fetch-depth: 0
+    - name: Authorize
+      uses: open-turo/action-git-auth@v1
+      with:
+        token: ${{ inputs.github-token }}
+    - name: Login to docker hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ inputs.docker-hub-username }}
+        password: ${{ inputs.docker-hub-password }}
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v3
+      with:
+        images: ${{ inputs.docker-hub-repository }}/${{ inputs.docker-hub-image-name }}
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=semver,pattern={{version}}
+          type=sha
+    - name: Build and push
+      uses: docker/build-push-action@v2
+      with:
+        context: ${{ inputs.docker-context }}
+        build-args: |
+          GIT_COMMIT=${GITHUB_SHA}
+          GITHUB_TOKEN=${{ inputs.github-token }}
+        push: false
+        tags: ${{ steps.meta.output.tags }}
+        labels: ${{ steps.meta.output.labels }}
