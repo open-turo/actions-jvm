@@ -1,5 +1,5 @@
-name: "jvm Test"
-description: "Executes jvm unit tests within repository reporting test coverage metrics"
+name: jvm Test
+description: GitHub Action that runs unit tests present within a JVM based (e.g. Java) GitHub repository and report test coverage metrics.
 inputs:
   checkout-repo:
     required: false
@@ -7,21 +7,19 @@ inputs:
     default: "true"
   github-token:
     required: true
-    description: "GitHub token that can checkout the repository. e.g. 'secrets.GITHUB_TOKEN'"
+    description: GitHub token that can checkout the repository. e.g. 'secrets.GITHUB_TOKEN'
   artifactory-username:
     required: true
-    description: "Username to use for Artifactory access"
+    description: Username to use for Artifactory access
   artifactory-auth-token:
     required: true
-    description: "Authentication token to use with username for Artifactory access"
+    description: Authentication token to use with username for Artifactory access
 runs:
   using: composite
   steps:
     - name: Checkout
       uses: actions/checkout@v3
       if: inputs.checkout-repo
-      with:
-        fetch-depth: 0
     - name: Sdkman
       shell: bash
       run: sdk env install
