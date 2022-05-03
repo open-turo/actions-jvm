@@ -2,6 +2,10 @@
 
 GitHub Actions for JVM based repositories, such as for Java and Kotlin.
 
+## Note: This action group is not ready for general use!
+
+These are stub actions that should be reviewed, refined, and implemented appropriately for JVM workflows.
+
 ## Actions
 
 ### action: [`lint`](./lint)
