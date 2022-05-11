@@ -20,9 +20,8 @@ runs:
     - name: Checkout
       uses: actions/checkout@v3
       if: inputs.checkout-repo
-    - name: Sdkman
-      shell: bash
-      run: sdk env install
+    - name: Setup tools
+      uses: open-turo/action-setup-tools@v1
     - name: Test
       env:
         JAVA_HOME: ${{ env.JAVA_HOME }}
