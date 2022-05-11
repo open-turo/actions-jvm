@@ -16,10 +16,12 @@ jobs:
 
 ## Inputs
 
-| parameter     | description                                                                | required | default |
-| ------------- | -------------------------------------------------------------------------- | -------- | ------- |
-| checkout-repo | Perform checkout as first step of action                                   | `false`  | true    |
-| github-token  | GitHub token that can checkout the repository. e.g. 'secrets.GITHUB_TOKEN' | `true`   |         |
+| parameter              | description                                                                | required | default |
+| ---------------------- | -------------------------------------------------------------------------- | -------- | ------- |
+| checkout-repo          | Perform checkout as first step of action                                   | `false`  | true    |
+| github-token           | GitHub token that can checkout the repository. e.g. 'secrets.GITHUB_TOKEN' | `true`   |         |
+| artifactory-username   | Username to use for Artifactory access                                     | `true`   |         |
+| artifactory-auth-token | Authentication token to use with username for Artifactory access           | `true`   |         |
 
 ## Runs
 
