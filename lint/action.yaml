@@ -8,6 +8,12 @@ inputs:
   github-token:
     required: true
     description: GitHub token that can checkout the repository. e.g. 'secrets.GITHUB_TOKEN'
+  artifactory-username:
+    required: true
+    description: Username to use for Artifactory access
+  artifactory-auth-token:
+    required: true
+    description: Authentication token to use with username for Artifactory access
 runs:
   using: composite
   steps:
