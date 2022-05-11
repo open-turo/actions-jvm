@@ -22,6 +22,6 @@ runs:
       with:
         fetch-depth: 0
     - uses: open-turo/action-pre-commit@v1
-    - if: hashFiles('script/lint') != ''
-      shell: bash
-      run: script/lint
+      env:
+        ORG_GRADLE_PROJECT_artifactoryUsername: ${{ inputs.artifactory-username }}
+        ORG_GRADLE_PROJECT_artifactoryAuthToken: ${{ inputs.artifactory-auth-token }}
