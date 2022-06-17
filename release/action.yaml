@@ -24,7 +24,7 @@ outputs:
     value: ${{ steps.release.outputs.new_release_version }}
   new-release-major-version:
     description: Major version of the new release
-    value: ${{ steps.release.outputs.release-major }}
+    value: ${{ steps.release.outputs.new_release_major_version }}
 runs:
   using: composite
   steps:
@@ -34,7 +34,7 @@ runs:
       with:
         fetch-depth: 0
     - name: Release
-      uses: cycjimmy/semantic-release-action@v2
+      uses: cycjimmy/semantic-release-action@v3
       with:
         dry_run: ${{ inputs.dry-run }}
         extra_plugins: ${{ inputs.extra-plugins }}
