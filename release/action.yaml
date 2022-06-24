@@ -33,6 +33,8 @@ runs:
       if: inputs.checkout-repo
       with:
         fetch-depth: 0
+    - name: Setup tools
+      uses: open-turo/action-setup-tools@v1
     - name: Release
       uses: cycjimmy/semantic-release-action@v3
       with:
