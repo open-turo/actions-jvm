@@ -36,6 +36,7 @@ runs:
     - name: Setup tools
       uses: open-turo/action-setup-tools@v1
     - name: Release
+      id: release
       uses: cycjimmy/semantic-release-action@v3
       with:
         dry_run: ${{ inputs.dry-run }}
