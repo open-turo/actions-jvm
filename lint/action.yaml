@@ -17,11 +17,13 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/checkout@v3
-      if: inputs.checkout-repo == 'true'
+    - name: Checkout
+      uses: actions/checkout@v3
+      if: inputs.checkout-repo
       with:
         fetch-depth: 0
-    - uses: open-turo/action-pre-commit@v1
+    - Name: Pre-commit
+      uses: open-turo/action-pre-commit@v1
       env:
         ORG_GRADLE_PROJECT_artifactoryUsername: ${{ inputs.artifactory-username }}
         ORG_GRADLE_PROJECT_artifactoryAuthToken: ${{ inputs.artifactory-auth-token }}
