@@ -14,6 +14,10 @@ inputs:
   artifactory-auth-token:
     required: true
     description: Authentication token to use with username for Artifactory access
+  gradlew-args:
+    required: false
+    description: An optional string of command line arguments to pass to gradlew. e.g. "--debug"
+    default: ""
 runs:
   using: composite
   steps:
@@ -30,4 +34,4 @@ runs:
         sdk current
         sdk env
         sdk current
-        ./gradlew test -PartifactoryUsername=${{ inputs.artifactory-username }} -PartifactoryAuthToken=${{ inputs.artifactory-auth-token }}
+        ./gradlew test -PartifactoryUsername=${{ inputs.artifactory-username }} -PartifactoryAuthToken=${{ inputs.artifactory-auth-token }} ${{ inputs.gradlew-args }}
