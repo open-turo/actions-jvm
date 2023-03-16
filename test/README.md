@@ -6,6 +6,8 @@ GitHub Action that runs unit tests present within a JVM based (e.g. Java) GitHub
 
 ## Usage
 
+### Basic
+
 ```yaml
 jobs:
   test:
@@ -14,14 +16,27 @@ jobs:
         uses: open-turo/actions-jvm/test@v1
 ```
 
+### Enabling debug output in test
+
+```yaml
+jobs:
+  test:
+    steps:
+      - name: Test
+        uses: open-turo/actions-jvm/test@v1
+        with:
+          gradlew-args: --debug
+```
+
 ## Inputs
 
-| parameter              | description                                                                | required | default |
-| ---------------------- | -------------------------------------------------------------------------- | -------- | ------- |
-| checkout-repo          | Perform checkout as first step of action                                   | `false`  | true    |
-| github-token           | GitHub token that can checkout the repository. e.g. 'secrets.GITHUB_TOKEN' | `true`   |         |
-| artifactory-username   | Username to use for Artifactory access                                     | `true`   |         |
-| artifactory-auth-token | Authentication token to use with username for Artifactory access           | `true`   |         |
+| parameter              | description                                                                     | required | default |
+| ---------------------- | ------------------------------------------------------------------------------- | -------- | ------- |
+| checkout-repo          | Perform checkout as first step of action                                        | `false`  | true    |
+| github-token           | GitHub token that can checkout the repository. e.g. 'secrets.GITHUB_TOKEN'      | `true`   |         |
+| artifactory-username   | Username to use for Artifactory access                                          | `true`   |         |
+| artifactory-auth-token | Authentication token to use with username for Artifactory access                | `true`   |         |
+| gradlew-args           | An optional string of command line arguments to pass to gradlew. e.g. "--debug" | `false`  |         |
 
 ## Runs
 
