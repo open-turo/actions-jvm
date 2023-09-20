@@ -1,8 +1,10 @@
-# GitHub Action Release
+# GitHub Action: Prerelease Microservice
 
 ## Description
 
-GitHub Action to publish a new release
+GitHub Action to compute a prerelease version based on the latest release version and the number of commits since the
+latest release. This will also generate a docker tag based on the computed version if the label `prerelease` is
+specified on the PR.
 
 ## Configuration
 
@@ -17,13 +19,17 @@ GitHub Action to publish a new release
 ```yaml
 steps:
   - name: Action semantic release
-    uses: open-turo/actions-jvm/release@v1
+    uses: open-turo/actions-jvm/prerelease-msvc@v1
     with:
       github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 **IMPORTANT**: `GITHUB_TOKEN` does not have the required permissions to operate on protected branches.
-If you are using this action for protected branches, replace `GITHUB_TOKEN` with [Personal Access Token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line). If using the `@semantic-release/git` plugin for protected branches, avoid persisting credentials as part of `actions/checkout@v4` by setting the parameter `persist-credentials: false`. This credential does not have the required permission to operate on protected branches.
+If you are using this action for protected branches, replace `GITHUB_TOKEN`
+with [Personal Access Token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line).
+If using the `@semantic-release/git` plugin for protected branches, avoid persisting credentials as part
+of `actions/checkout@v4` by setting the parameter `persist-credentials: false`. This credential does not have the
+required permission to operate on protected branches.
 
 ## Inputs
 
@@ -31,7 +37,6 @@ If you are using this action for protected branches, replace `GITHUB_TOKEN` with
 | ------------- | --------------------------------------------------------------------------------------------------------------------- | -------- | ------- |
 | checkout-repo | Perform checkout as first step of action                                                                              | `false`  | true    |
 | github-token  | GitHub token that can checkout the repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN' | `true`   |         |
-| dry-run       | Whether to run semantic release in `dry-run` mode. It will override the dryRun attribute in your configuration file   | `false`  | false   |
 | extra-plugins | Extra plugins for pre-install. You can also specify specifying version range for the extra plugins if you prefer.     | `false`  |         |
 
 ## Outputs
@@ -59,7 +64,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Release
-        uses: open-turo/actions-jvm/release@v1
+        uses: open-turo/actions-jvm/prerelease-msvc@v1
         id: semantic # Need an `id` for output variables
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
