@@ -35,13 +35,13 @@ inputs:
 outputs:
   new-release-published:
     description: Whether a new release was published
-    value: ${{ steps.release.outputs.new_release_published }}
+    value: ${{ steps.prerelease.outputs.new-release-published }}
   new-release-version:
     description: Version of the new release
-    value: ${{ steps.release.outputs.new_release_version }}
+    value: ${{ steps.prerelease.outputs.new-release-version }}
   new-release-major-version:
     description: Major version of the new release
-    value: ${{ steps.release.outputs.new_release_major_version }}
+    value: ${{ steps.prerelease.outputs.new-release-major_version }}
   image-name:
     description: Docker image name
     value: ${{ steps.build-docker.outputs.image-name }}
