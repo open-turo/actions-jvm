@@ -124,7 +124,7 @@ runs:
         echo "version=${{ steps.prerelease.outputs.new-release-version }}-pr-${{ steps.PR.outputs.number }}.${{ github.run_number }}.${{ github.run_attempt }}" >> $GITHUB_OUTPUT
         echo "run-url=https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> "$GITHUB_OUTPUT"
 
-    - uses: open-turo/actions-jvm/build-docker@add-prerelease-msvc-action
+    - uses: open-turo/actions-jvm/build-docker@v1
       if: steps.prerelease.outputs.new-release-published == 'true'
       id: build-docker
       with:
