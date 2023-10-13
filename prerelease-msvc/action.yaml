@@ -101,7 +101,7 @@ runs:
 
     - name: Generate release notes
       id: prerelease
-      uses: open-turo/actions-release/semantic-release@v2
+      uses: open-turo/actions-release/semantic-release@v3
       if: steps.check-pr.outputs.has_prerelease_label == 'true'
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
