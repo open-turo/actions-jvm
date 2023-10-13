@@ -27,3 +27,11 @@ runs:
       env:
         ORG_GRADLE_PROJECT_artifactoryUsername: ${{ inputs.artifactory-username }}
         ORG_GRADLE_PROJECT_artifactoryAuthToken: ${{ inputs.artifactory-auth-token }}
+    - uses: open-turo/actions-release/lint-release-notes@v4
+      if: github.event_name == 'pull_request'
+      with:
+        github-token: ${{ inputs.github-token }}
+        checkout-repo: true
+      env:
+        ORG_GRADLE_PROJECT_artifactoryUsername: ${{ inputs.artifactory-auth-token }}
+        ORG_GRADLE_PROJECT_artifactoryAuthToken: ${{ inputs.artifactory-auth-token }}
