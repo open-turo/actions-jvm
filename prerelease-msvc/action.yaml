@@ -83,9 +83,6 @@ runs:
           echo "pr_found=true" >> $GITHUB_OUTPUT
           echo "has_prerelease_label=${{ contains(toJSON(fromJSON(steps.PR.outputs.pr).labels.*.name), 'prerelease') }}" >> $GITHUB_OUTPUT
         fi
-        echo "JSON ${prJSON}"
-      env:
-        prJSON: ${{ toJSON(fromJSON(steps.PR.outputs.pr)) }}
 
     - if: steps.check-pr.outputs.pr_found != 'true'
       shell: bash
