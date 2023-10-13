@@ -8,6 +8,10 @@ inputs:
     required: false
     description: Perform checkout as first step of action
     default: "true"
+  create-prerelease:
+    required: false
+    description: Whether semantic-release should create a prerelease or do a dry run. This can be useful to set to true when a prerelease requires pushing artifacts semantic-release is in charge of generating
+    default: "false"
   docker-config-file:
     required: false
     description: Path to the docker config file (defaults to .docker-config.json) Must contain imageName, may contain dockerfile.
@@ -99,7 +103,7 @@ runs:
     - uses: open-turo/action-setup-tools@v1
       if: steps.check-pr.outputs.has_prerelease_label == 'true'
 
-    - name: Generate release notes
+    - name: Prerelease
       id: prerelease
       uses: open-turo/actions-release/semantic-release@v3
       if: steps.check-pr.outputs.has_prerelease_label == 'true'
@@ -109,8 +113,8 @@ runs:
         ORG_GRADLE_PROJECT_artifactoryAuthToken: ${{ inputs.artifactory-auth-token }}
         ORG_GRADLE_PROJECT_artifactoryUsername: ${{ inputs.artifactory-username }}
       with:
-        branches: "${{ github.ref_name }}"
-        dry-run: true
+        branches: '["main", {"name": "${{ github.ref_name }}","channel": "next","prerelease": "pr-${{ steps.PR.outputs.number }}.${{ github.run_number }}.${{ github.run_attempt }}"}]'
+        dry-run: ${{ inputs.create-prerelease == 'false' }}
         extra-plugins: |
           @open-turo/semantic-release-config
 
@@ -118,7 +122,7 @@ runs:
       if: steps.check-pr.outputs.has_prerelease_label == 'true'
       shell: bash
       run: |
-        echo "version=${{ steps.prerelease.outputs.new-release-version }}-pr-${{ steps.PR.outputs.number }}.${{ github.run_number }}.${{ github.run_attempt }}" >> $GITHUB_OUTPUT
+        echo "version=${{ steps.prerelease.outputs.new-release-version }}" >> $GITHUB_OUTPUT
         echo "run-url=https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> "$GITHUB_OUTPUT"
 
     - uses: open-turo/actions-jvm/build-docker@v1

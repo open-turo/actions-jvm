@@ -33,11 +33,12 @@ required permission to operate on protected branches.
 
 ## Inputs
 
-| parameter     | description                                                                                                           | required | default |
-| ------------- | --------------------------------------------------------------------------------------------------------------------- | -------- | ------- |
-| checkout-repo | Perform checkout as first step of action                                                                              | `false`  | true    |
-| github-token  | GitHub token that can checkout the repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN' | `true`   |         |
-| extra-plugins | Extra plugins for pre-install. You can also specify specifying version range for the extra plugins if you prefer.     | `false`  |         |
+| parameter         | description                                                                                                           | required | default |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------- | -------- | ------- |
+| checkout-repo     | Perform checkout as first step of action                                                                              | `false`  | true    |
+| create-prerelease | Whether semantic-release should create a prerelease or do a dry run                                                   | `false`  | false   |
+| github-token      | GitHub token that can checkout the repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN' | `true`   |         |
+| extra-plugins     | Extra plugins for pre-install. You can also specify specifying version range for the extra plugins if you prefer.     | `false`  |         |
 
 ## Outputs
 
