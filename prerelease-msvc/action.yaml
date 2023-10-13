@@ -62,20 +62,66 @@ outputs:
 runs:
   using: composite
   steps:
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      shell: bash
+      run: |
+        echo "::group::Github Context"
+        echo "$GITHUB_CONTEXT"
+        echo "::endgroup::"
+
+    - name: Dump environment
+      shell: bash
+      run: |
+        echo "::group::bash_env"
+        set
+        echo "::endgroup::"
+
+    - name: Set vars
+      id: source-vars
+      shell: bash
+      env:
+        event_name: ${{ github.event_name }}
+        dispatch_client_payload_ref: ${{ github.event.client_payload.ref }}
+        dispatch_client_payload_sha: ${{ github.event.client_payload.sha }}
+        push_ref_name: ${{ github.ref_name }}
+        push_sha: ${{ github.sha }}
+        pull_request_ref_name: ${{ github.event.pull_request.head.ref }}
+        pull_request_sha: ${{ github.event.pull_request.head.sha }}
+      run: |
+        echo "event_name=$event_name"
+
+        if [ "$event_name" == "push" ]; then
+          branch=$push_ref_name
+          sha=$push_sha
+        elif [ "$event_name" == "repository_dispatch" ]; then
+          branch=$dispatch_client_payload_ref
+          sha=$dispatch_client_payload_sha
+        elif [ "$event_name" == "pull_request" ]; then
+          branch=$pull_request_ref_name
+          sha=$pull_request_sha
+        else
+          echo "::error::Unsupported event type '$event_name'"
+          exit 1
+        fi
+
+        echo "branch=$branch"
+        echo "branch=$branch" >> $GITHUB_OUTPUT
+
+        echo "sha=$sha"
+        echo "sha=$sha" >> $GITHUB_OUTPUT
+
     - uses: actions/checkout@v4
-      if: inputs.checkout-repo == 'true' && github.event_name == 'push'
       with:
         fetch-depth: 0
-        ref: ${{ github.base_ref }}
-    - uses: actions/checkout@v4
-      if: inputs.checkout-repo == 'true' && github.event_name == 'repository_dispatch'
-      with:
-        fetch-depth: 0
-        ref: ${{ github.event.client_payload.ref }}
+        ref: ${{ steps.source-vars.outputs.branch }}
 
     # Find PR
     - uses: 8BitJonny/gh-get-current-pr@2.2.0
       id: PR
+      with:
+        sha: ${{ steps.source-vars.outputs.sha }}
 
     - id: check-pr
       shell: bash
@@ -87,17 +133,18 @@ runs:
           echo "pr_found=true" >> $GITHUB_OUTPUT
           echo "has_prerelease_label=${{ contains(toJSON(fromJSON(steps.PR.outputs.pr).labels.*.name), 'prerelease') }}" >> $GITHUB_OUTPUT
         fi
+        git branch
+        echo "branch: ${{ steps.source-vars.outputs.branch }}"
 
     - if: steps.check-pr.outputs.pr_found != 'true'
       shell: bash
-      run: echo "PR does not exist for branch (${{ github.ref_name }}) - ignoring"
+      run: echo "PR does not exist for branch (${{ steps.source-vars.outputs.branch }}) - ignoring"
 
     - if: steps.check-pr.outputs.has_prerelease_label == 'true'
       shell: bash
       run: |
         echo "Your PR number is ${{ steps.PR.outputs.number }}"
-        echo "contains: ${{ contains(toJSON(fromJSON(steps.PR.outputs.pr).labels.*.name), 'dog') }}"
-        echo "contains: ${{ contains(toJSON(fromJSON(steps.PR.outputs.pr).labels.*.name), 'prerelease') }}"
+        echo "::debug::labels.contains('prerelease'): ${{ contains(toJSON(fromJSON(steps.PR.outputs.pr).labels.*.name), 'prerelease') }}"
 
     # Compute next release
     - uses: open-turo/action-setup-tools@v1
@@ -105,17 +152,18 @@ runs:
 
     - name: Prerelease
       id: prerelease
-      uses: open-turo/actions-release/semantic-release@v3
+      uses: open-turo/actions-release/semantic-release@v4
       if: steps.check-pr.outputs.has_prerelease_label == 'true'
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
-        GITHUB_REF: ${{ github.head_ref }}
         ORG_GRADLE_PROJECT_artifactoryAuthToken: ${{ inputs.artifactory-auth-token }}
         ORG_GRADLE_PROJECT_artifactoryUsername: ${{ inputs.artifactory-username }}
       with:
-        branches: '["main", {"name": "${{ github.ref_name }}","channel": "next","prerelease": "pr-${{ steps.PR.outputs.number }}.${{ github.run_number }}.${{ github.run_attempt }}"}]'
+        branches: '["main", {"name": "${{ steps.source-vars.outputs.branch }}","channel": "next","prerelease": "pr-${{ steps.PR.outputs.number }}.${{ github.run_number }}.${{ github.run_attempt }}"}]'
         dry-run: ${{ inputs.create-prerelease == 'false' }}
         extra-plugins: ${{ inputs.extra-plugins }}
+        override-github-ref-name: ${{ steps.source-vars.outputs.branch }}
+        override-github-sha: ${{ steps.source-vars.outputs.sha }}  
 
     - id: vars
       if: steps.check-pr.outputs.has_prerelease_label == 'true'
@@ -138,6 +186,24 @@ runs:
           type=ref,event=branch
           type=ref,event=pr
           type=semver,pattern={{version}},value=${{ steps.vars.outputs.version }}
+
+    - name: Add new version to summary
+      shell: bash
+      if: steps.prerelease.outputs.new-release-published == 'true'
+      env:
+        NEW_VERSION: ${{ steps.vars.outputs.version }}
+        DOCKER_IMAGE: ${{ steps.build-docker.outputs.image-with-tag }}
+      run: |
+        echo "::notice::new version: \`${NEW_VERSION}\`"
+        echo "#### New version: \`${NEW_VERSION}\`" >> $GITHUB_STEP_SUMMARY
+        echo "#### Docekr image: \`${DOCKER_IMAGE}\`" >> $GITHUB_STEP_SUMMARY
+
+    - name: Add no new version to summary
+      shell: bash
+      if: steps.prerelease.outputs.new-release-published != 'true'
+      run: |
+        echo "::notice::no new version"
+        echo "### New version: 'NONE" >> $GITHUB_STEP_SUMMARY
 
     - name: Check for release notes comment
       uses: peter-evans/find-comment@v2
