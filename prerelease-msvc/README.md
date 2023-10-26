@@ -1,10 +1,12 @@
 # GitHub Action: Prerelease Microservice
 
+<!-- prettier-ignore-start -->
+<!-- action-docs-description -->
 ## Description
 
-GitHub Action to compute a prerelease version based on the latest release version and the number of commits since the
-latest release. This will also generate a docker tag based on the computed version if the label `prerelease` is
-specified on the PR.
+< GitHub Action to compute a prerelease version based on the latest release version and the number of commits since the latest release. This will also generate a docker tag based on the computed version if the label `prerelease` is specified on the PR.
+<!-- action-docs-description -->
+<!-- prettier-ignore-end -->
 
 ## Configuration
 
@@ -31,26 +33,46 @@ If using the `@semantic-release/git` plugin for protected branches, avoid persis
 of `actions/checkout@v4` by setting the parameter `persist-credentials: false`. This credential does not have the
 required permission to operate on protected branches.
 
+<!-- prettier-ignore-start -->
+<!-- action-docs-inputs -->
 ## Inputs
 
-| parameter         | description                                                                                                           | required | default |
-| ----------------- | --------------------------------------------------------------------------------------------------------------------- | -------- | ------- |
-| checkout-repo     | Perform checkout as first step of action                                                                              | `false`  | true    |
-| create-prerelease | Whether semantic-release should create a prerelease or do a dry run                                                   | `false`  | false   |
-| github-token      | GitHub token that can checkout the repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN' | `true`   |         |
-| extra-plugins     | Extra plugins for pre-install. You can also specify specifying version range for the extra plugins if you prefer.     | `false`  |         |
+| parameter | description | required | default |
+| --- | --- | --- | --- |
+| checkout-repo | Perform checkout as first step of action | `false` | true |
+| create-prerelease | Whether semantic-release should create a prerelease or do a dry run. This can be useful to set to true when a prerelease requires pushing artifacts semantic-release is in charge of generating | `false` | false |
+| docker-config-file | Path to the docker config file (defaults to .docker-config.json) Must contain imageName, may contain dockerfile. | `false` | .docker-config.json |
+| dockerhub-user | username for dockerhub | `true` |  |
+| dockerhub-password | password for dockerhub | `true` |  |
+| github-token | GitHub token that can checkout the repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN' | `true` |  |
+| extra-plugins | Extra plugins for pre-install. You can also specify specifying version range for the extra plugins if you prefer.  Defaults to install @open-turo/semantic-release-config. | `false` | @open-turo/semantic-release-config  |
+| artifactory-username | Artifactory user name usually secrets.ARTIFACTORY_USERNAME | `true` |  |
+| artifactory-auth-token | Artifactory auth token usually secrets.ARTIFACTORY_AUTH_TOKEN | `true` |  |
+<!-- action-docs-inputs -->
 
+<!-- action-docs-outputs -->
 ## Outputs
 
-| parameter                 | description                         |
-| ------------------------- | ----------------------------------- |
-| new-release-published     | Whether a new release was published |
-| new-release-version       | Version of the new release          |
-| new-release-major-version | Major version of the new release    |
+| parameter | description |
+| --- | --- |
+| new-release-published | Whether a new release was published |
+| new-release-version | Version of the new release |
+| new-release-major-version | Major version of the new release |
+| image-name | Docker image name |
+| image-with-tag | Full image with tag - <image-name>:<image-version> |
+| pull-request-number | Pull request number |
+| run-url | URL to the GHA run |
+<!-- action-docs-outputs -->
 
+<!-- action-docs-runs -->
 ## Runs
 
-This action is an `composite` action.
+This action is a `composite` action.
+<!-- action-docs-runs -->
+
+<!-- action-docs-usage  -->
+<!-- action-docs-usage -->
+<!-- prettier-ignore-end -->
 
 ## Additional Examples
 
