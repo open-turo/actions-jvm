@@ -1,6 +1,12 @@
 # GitHub Action Release
 
-GitHub Action for [Semantic Release][semantic-url].
+<!-- prettier-ignore-start -->
+<!-- action-docs-description -->
+## Description
+
+Builds and push docker images for the input platform, tags and image version
+<!-- action-docs-description -->
+<!-- prettier-ignore-end -->
 
 ## Usage
 
@@ -49,26 +55,41 @@ steps:
 **IMPORTANT** : `GITHUB_TOKEN` does not have the required permissions to operate on protected branches.
 If you are using this action for protected branches, replace `GITHUB_TOKEN` with [Personal Access Token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line). If using the `@semantic-release/git` plugin for protected branches, avoid persisting credentials as part of `actions/checkout@v4` by setting the parameter `persist-credentials: false`. This credential does not have the required permission to operate on protected branches.
 
-### Inputs
+<!-- prettier-ignore-start -->
+<!-- action-docs-inputs -->
+## Inputs
 
-|    Input Parameter     | Required | Description                                                                                                      | Default               |
-| :--------------------: | -------- | ---------------------------------------------------------------------------------------------------------------- | --------------------- |
-|   docker-config-file   | false    | Whether or not to checkout the repo as the first step                                                            | `.docker-config.json` |
-|     dockerhub-user     | true     | username for dockerhub                                                                                           |                       |
-|   dockerhub-password   | true     | password for dockerhub                                                                                           |                       |
-|      github-token      | true     | Path to the docker config file (defaults to .docker-config.json) Must contain imageName, may contain dockerfile. |                       |
-|  artifactory-username  | true     | Artifactory user name usually secrets.ARTIFACTORY_USERNAME                                                       |                       |
-| artifactory-auth-token | true     | Artifactory auth token usually secrets.ARTIFACTORY_PASSWORD                                                      |                       |
-|     image-version      | true     | Docker image version                                                                                             |                       |
-|     image-platform     | false    | Target platform to build image for (eg. linux/amd64 (default), linux/arm64, etc)                                 | linux/amd64           |
-|  docker-metadata-tags  | false    | 'List of tags as key-value pair attributes' See: https://github.com/docker/metadata-action#tags-input            | linux/amd64           |
+| parameter | description | required | default |
+| --- | --- | --- | --- |
+| docker-config-file | Path to the docker config file (defaults to .docker-config.json) Must contain imageName, may contain dockerfile. | `false` | .docker-config.json |
+| dockerhub-user | username for dockerhub | `true` |  |
+| dockerhub-password | password for dockerhub | `true` |  |
+| github-token | Usually secrets.GITHUB_TOKEN | `true` |  |
+| artifactory-username | Artifactory user name usually secrets.ARTIFACTORY_USERNAME | `true` |  |
+| artifactory-auth-token | Artifactory auth token usually secrets.ARTIFACTORY_AUTH_TOKEN | `true` |  |
+| image-version | Docker image version | `true` |  |
+| image-platform | Target platform to build image for (eg. linux/amd64 (default), linux/arm64, etc) | `false` | linux/amd64 |
+| docker-metadata-tags | 'List of tags as key-value pair attributes' See: https://github.com/docker/metadata-action#tags-input | `false` |  |
+<!-- action-docs-inputs -->
 
-### Outputs
+<!-- action-docs-outputs -->
+## Outputs
 
-| Output Parameter | Description                                        |
-| :--------------: | -------------------------------------------------- |
-|    image-name    | Docker image name                                  |
-|  image-with-tag  | Full image with tag - <image-name>:<image-version> |
+| parameter | description |
+| --- | --- |
+| image-name | Docker image name |
+| image-with-tag | Full image with tag - <image-name>:<image-version> |
+<!-- action-docs-outputs -->
+
+<!-- action-docs-runs -->
+## Runs
+
+This action is a `composite` action.
+<!-- action-docs-runs -->
+
+<!-- action-docs-usage  -->
+<!-- action-docs-usage -->
+<!-- prettier-ignore-end -->
 
 #### Using Output Variables:
 

@@ -71,13 +71,6 @@ runs:
         echo "$GITHUB_CONTEXT"
         echo "::endgroup::"
 
-    - name: Dump environment
-      shell: bash
-      run: |
-        echo "::group::bash_env"
-        set
-        echo "::endgroup::"
-
     - name: Set vars
       id: source-vars
       shell: bash

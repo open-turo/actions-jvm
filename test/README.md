@@ -1,8 +1,12 @@
 # GitHub Action Test
 
+<!-- prettier-ignore-start -->
+<!-- action-docs-description -->
 ## Description
 
 GitHub Action that runs unit tests present within a JVM based (e.g. Java) GitHub repository and report test coverage metrics.
+<!-- action-docs-description -->
+<!-- prettier-ignore-end -->
 
 ## Usage
 
@@ -40,20 +44,33 @@ jobs:
           gradle-task: integrationTest
 ```
 
+<!-- prettier-ignore-start -->
+<!-- action-docs-inputs -->
 ## Inputs
 
-| parameter              | description                                                                     | required | default |
-| ---------------------- | ------------------------------------------------------------------------------- | -------- | ------- |
-| checkout-repo          | Perform checkout as first step of action                                        | `false`  | true    |
-| github-token           | GitHub token that can checkout the repository. e.g. 'secrets.GITHUB_TOKEN'      | `true`   |         |
-| artifactory-username   | Username to use for Artifactory access                                          | `true`   |         |
-| artifactory-auth-token | Authentication token to use with username for Artifactory access                | `true`   |         |
-| gradle-task            | An optional string for the gradle test task to run. e.g. "integrationTest"      | `false`  | `test`  |
-| gradlew-args           | An optional string of command line arguments to pass to gradlew. e.g. "--debug" | `false`  |         |
+| parameter | description | required | default |
+| --- | --- | --- | --- |
+| checkout-repo | Perform checkout as first step of action | `false` | true |
+| github-token | GitHub token that can checkout the repository. e.g. 'secrets.GITHUB_TOKEN' | `true` |  |
+| artifactory-username | Username to use for Artifactory access | `true` |  |
+| artifactory-auth-token | Authentication token to use with username for Artifactory access | `true` |  |
+| gradle-task | An optional string for the gradle test task to run. e.g. "integrationTest" | `false` | test |
+| gradlew-args | An optional string of command line arguments to pass to gradlew. e.g. "--debug" | `false` |  |
+<!-- action-docs-inputs -->
 
+<!-- action-docs-outputs -->
+
+<!-- action-docs-outputs -->
+
+<!-- action-docs-runs -->
 ## Runs
 
-This action is an `composite` action.
+This action is a `composite` action.
+<!-- action-docs-runs -->
+
+<!-- action-docs-usage  -->
+<!-- action-docs-usage -->
+<!-- prettier-ignore-end -->
 
 ## Test
 
