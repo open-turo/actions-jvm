@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.1.0 # Use the ref you want to point at
+    rev: v4.5.0 # Use the ref you want to point at
     hooks:
       - id: check-json
       - id: check-yaml
@@ -18,6 +18,6 @@ repos:
         stages: [commit-msg]
         additional_dependencies: ["@open-turo/commitlint-config-conventional"]
   - repo: https://github.com/rhysd/actionlint
-    rev: v1.6.8
+    rev: v1.6.26
     hooks:
       - id: actionlint
