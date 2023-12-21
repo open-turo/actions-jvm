@@ -156,7 +156,7 @@ runs:
         dry-run: ${{ inputs.create-prerelease == 'false' }}
         extra-plugins: ${{ inputs.extra-plugins }}
         override-github-ref-name: ${{ steps.source-vars.outputs.branch }}
-        override-github-sha: ${{ steps.source-vars.outputs.sha }}  
+        override-github-sha: ${{ steps.source-vars.outputs.sha }}
 
     - id: vars
       if: steps.check-pr.outputs.has_prerelease_label == 'true'
