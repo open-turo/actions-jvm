@@ -115,8 +115,7 @@ runs:
       with:
         branches: '["main", {"name": "${{ github.ref_name }}","channel": "next","prerelease": "pr-${{ steps.PR.outputs.number }}.${{ github.run_number }}.${{ github.run_attempt }}"}]'
         dry-run: ${{ inputs.create-prerelease == 'false' }}
-        extra-plugins: |
-          @open-turo/semantic-release-config
+        extra-plugins: ${{ inputs.extra-plugins }}
 
     - id: vars
       if: steps.check-pr.outputs.has_prerelease_label == 'true'
