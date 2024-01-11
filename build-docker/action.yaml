@@ -99,3 +99,7 @@ runs:
         push: true
         tags: ${{ steps.config.outputs.image-name }}:${{ inputs.image-version }}
         labels: ${{ steps.meta.outputs.labels }}
+        secrets: |
+          ARTIFACTORY_USERNAME=${{ inputs.ARTIFACTORY_USERNAME }}
+          ARTIFACTORY_AUTH_TOKEN=${{ inputs.ARTIFACTORY_AUTH_TOKEN }}
+          GITHUB_TOKEN=${{ inputs.github-token }}
