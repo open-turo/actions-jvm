@@ -100,6 +100,6 @@ runs:
         tags: ${{ steps.config.outputs.image-name }}:${{ inputs.image-version }}
         labels: ${{ steps.meta.outputs.labels }}
         secrets: |
-          ARTIFACTORY_USERNAME=${{ inputs.ARTIFACTORY_USERNAME }}
-          ARTIFACTORY_AUTH_TOKEN=${{ inputs.ARTIFACTORY_AUTH_TOKEN }}
+          ARTIFACTORY_USERNAME=${{ inputs.artifactory-username }}
+          ARTIFACTORY_AUTH_TOKEN=${{ inputs.artifactory-auth-token }}
           GITHUB_TOKEN=${{ inputs.github-token }}
