@@ -38,7 +38,7 @@ If you are using this action for protected branches, replace `GITHUB_TOKEN` with
 | checkout-repo | Perform checkout as first step of action | `false` | true |
 | github-token | GitHub token that can checkout the repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN' | `true` |  |
 | dry-run | Whether to run semantic release in `dry-run` mode. It will override the dryRun attribute in your configuration file | `false` | false |
-| extra-plugins | Extra plugins for pre-install. You can also specify specifying version range for the extra plugins if you prefer.  Defaults to install @open-turo/semantic-release-config. | `false` | @open-turo/semantic-release-config@^1.4.0  |
+| extra-plugins | Extra plugins for pre-install. You can also specify specifying version range for the extra plugins if you prefer.  Defaults to install @open-turo/semantic-release-config. | `false` | @open-turo/semantic-release-config  |
 <!-- action-docs-inputs -->
 
 <!-- action-docs-outputs -->
