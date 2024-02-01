@@ -1,16 +1,20 @@
-name: GitHub Action Release and Publish
+name: Action Release & Publish
 description: GitHub Action to publish a new release
 inputs:
   checkout-repo:
     required: false
     description: Perform checkout as first step of action
     default: "true"
+  checkout-fetch-depth:
+    required: false
+    description: The number of commits to fetch. 0 indicates all history for all branches and tags
+    default: "0"
   github-token:
     required: true
-    description: GitHub token that can checkout the repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN'
+    description: GitHub token that can checkout the consumer repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN'
   dry-run:
     required: false
-    description: Whether to run semantic release in `dry-run` mode. It will override the dryRun attribute in your configuration file
+    description: Whether to run semantic release in `dry-run` mode. It will override the `dryRun` attribute in your configuration file
     default: "false"
   extra-plugins:
     required: false
@@ -20,13 +24,13 @@ inputs:
 outputs:
   new-release-published:
     description: Whether a new release was published
-    value: ${{ steps.release.outputs.new_release_published }}
+    value: ${{ steps.release.outputs.new-release-published }}
   new-release-version:
     description: Version of the new release
-    value: ${{ steps.release.outputs.new_release_version }}
+    value: ${{ steps.release.outputs.new-release-version }}
   new-release-major-version:
     description: Major version of the new release
-    value: ${{ steps.release.outputs.new_release_major_version }}
+    value: ${{ steps.release.outputs.new-release-major-version }}
 runs:
   using: composite
   steps:
@@ -34,15 +38,30 @@ runs:
       uses: actions/checkout@v4
       if: inputs.checkout-repo == 'true'
       with:
-        fetch-depth: 0
+        fetch-depth: ${{ inputs.checkout-fetch-depth }}
         persist-credentials: false
     - name: Setup tools
-      uses: open-turo/action-setup-tools@v1
+      uses: open-turo/action-setup-tools@v2
+    - uses: 8BitJonny/gh-get-current-pr@2.2.0
+      id: PR
+      with:
+        sha: ${{ github.event.pull_request.head.sha }}
+    - name: Branches configuration
+      id: branches-configuration
+      shell: bash
+      run: |
+        if [ -z "${{ steps.PR.outputs.number }}" ]; then
+          echo "branches=${{ github.event.repository.default_branch }}" >> $GITHUB_OUTPUT
+        else
+          echo "branches=[\"${{ github.event.repository.default_branch }}\", {\"name\": \"${{ github.ref_name }}\",\"channel\": \"next\",\"prerelease\": \"pr-${{ steps.PR.outputs.number }}.${{ github.run_number }}.${{ github.run_attempt }}\"}]" >> $GITHUB_OUTPUT
+        fi
     - name: Release
       id: release
-      uses: cycjimmy/semantic-release-action@v3
+      uses: open-turo/actions-release/semantic-release@v4
       with:
-        dry_run: ${{ inputs.dry-run }}
-        extra_plugins: ${{ inputs.extra-plugins }}
+        branches: ${{ steps.branches-configuration.outputs.branches }}
+        dry-run: ${{ inputs.dry-run }}
+        extra-plugins: ${{ inputs.extra-plugins }}
+        github-token: ${{ inputs.github-token }}
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
