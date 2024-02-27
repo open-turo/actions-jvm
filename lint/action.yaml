@@ -23,7 +23,7 @@ runs:
       with:
         fetch-depth: 0
     - name: Pre-commit
-      uses: open-turo/action-pre-commit@v1
+      uses: open-turo/action-pre-commit@v2
       env:
         ORG_GRADLE_PROJECT_artifactoryUsername: ${{ inputs.artifactory-username }}
         ORG_GRADLE_PROJECT_artifactoryAuthToken: ${{ inputs.artifactory-auth-token }}
