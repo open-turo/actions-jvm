@@ -1,0 +1,37 @@
+name: jvm Lint
+description: GitHub Action to lint a JVM based repository
+inputs:
+  checkout-repo:
+    required: false
+    description: Perform checkout as first step of action
+    default: "true"
+  github-token:
+    required: true
+    description: GitHub token that can checkout the repository. e.g. 'secrets.GITHUB_TOKEN'
+  artifactory-username:
+    required: true
+    description: Username to use for Artifactory access
+  artifactory-auth-token:
+    required: true
+    description: Authentication token to use with username for Artifactory access
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      if: inputs.checkout-repo == 'true'
+      with:
+        fetch-depth: 0
+    - name: Pre-commit
+      uses: open-turo/action-pre-commit@v2
+      env:
+        ORG_GRADLE_PROJECT_artifactoryUsername: ${{ inputs.artifactory-username }}
+        ORG_GRADLE_PROJECT_artifactoryAuthToken: ${{ inputs.artifactory-auth-token }}
+    - uses: open-turo/actions-release/lint-release-notes@v4
+      if: github.event_name == 'pull_request'
+      with:
+        github-token: ${{ inputs.github-token }}
+        checkout-repo: true
+      env:
+        ORG_GRADLE_PROJECT_artifactoryUsername: ${{ inputs.artifactory-auth-token }}
+        ORG_GRADLE_PROJECT_artifactoryAuthToken: ${{ inputs.artifactory-auth-token }}

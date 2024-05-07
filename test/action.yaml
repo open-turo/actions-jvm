@@ -1,0 +1,41 @@
+name: jvm Test
+description: GitHub Action that runs unit tests present within a JVM based (e.g. Java) GitHub repository and report test coverage metrics.
+inputs:
+  checkout-repo:
+    required: false
+    description: "Perform checkout as first step of action"
+    default: "true"
+  github-token:
+    required: true
+    description: GitHub token that can checkout the repository. e.g. 'secrets.GITHUB_TOKEN'
+  artifactory-username:
+    required: true
+    description: Username to use for Artifactory access
+  artifactory-auth-token:
+    required: true
+    description: Authentication token to use with username for Artifactory access
+  gradle-task:
+    required: false
+    description: An optional string for the gradle test task to run. e.g. "integrationTest"
+    default: "test"
+  gradlew-args:
+    required: false
+    description: An optional string of command line arguments to pass to gradlew. e.g. "--debug"
+    default: ""
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      if: inputs.checkout-repo == 'true'
+    - name: Setup tools
+      uses: open-turo/action-setup-tools@v1
+    - name: Test
+      env:
+        JAVA_HOME: ${{ env.JAVA_HOME }}
+      shell: bash
+      run: |
+        sdk current
+        sdk env
+        sdk current
+        ./gradlew ${{ inputs.gradle-task }} -PartifactoryUsername=${{ inputs.artifactory-username }} -PartifactoryAuthToken=${{ inputs.artifactory-auth-token }} ${{ inputs.gradlew-args }}
