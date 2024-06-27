@@ -189,7 +189,7 @@ runs:
       run: |
         echo "::notice::new version: \`${NEW_VERSION}\`"
         echo "#### New version: \`${NEW_VERSION}\`" >> $GITHUB_STEP_SUMMARY
-        echo "#### Docekr image: \`${DOCKER_IMAGE}\`" >> $GITHUB_STEP_SUMMARY
+        echo "#### Docker image: \`${DOCKER_IMAGE}\`" >> $GITHUB_STEP_SUMMARY
 
     - name: Add no new version to summary
       shell: bash
