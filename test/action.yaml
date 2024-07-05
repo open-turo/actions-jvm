@@ -1,6 +1,12 @@
 name: jvm Test
 description: GitHub Action that runs unit tests present within a JVM based (e.g. Java) GitHub repository and report test coverage metrics.
 inputs:
+  artifactory-username:
+    required: true
+    description: Username to use for Artifactory access
+  artifactory-auth-token:
+    required: true
+    description: Authentication token to use with username for Artifactory access
   checkout-repo:
     required: false
     description: "Perform checkout as first step of action"
@@ -8,20 +14,15 @@ inputs:
   github-token:
     required: true
     description: GitHub token that can checkout the repository. e.g. 'secrets.GITHUB_TOKEN'
-  artifactory-username:
-    required: true
-    description: Username to use for Artifactory access
-  artifactory-auth-token:
-    required: true
-    description: Authentication token to use with username for Artifactory access
-  gradle-task:
-    required: false
-    description: An optional string for the gradle test task to run. e.g. "integrationTest"
-    default: "test"
   gradlew-args:
     required: false
     description: An optional string of command line arguments to pass to gradlew. e.g. "--debug"
     default: ""
+  gradle-task:
+    required: false
+    description: An optional string for the gradle test task to run. e.g. "integrationTest"
+    default: "test"
+
 runs:
   using: composite
   steps:
