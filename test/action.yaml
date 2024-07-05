@@ -35,11 +35,6 @@ runs:
       if: inputs.checkout-repo == 'true'
     - name: Setup tools
       uses: open-turo/action-setup-tools@v1
-    - name: Run setup script
-      if: inputs.setup-script != ''
-      shell: bash
-      run: |
-        ${{ inputs.setup-script }}
     - name: Test
       env:
         JAVA_HOME: ${{ env.JAVA_HOME }}
@@ -48,4 +43,7 @@ runs:
         sdk current
         sdk env
         sdk current
+        if [ -n "${{ inputs.setup-script }}" ]; then
+          ${{ inputs.setup-script }}
+        fi
         ./gradlew ${{ inputs.gradle-task }} -PartifactoryUsername=${{ inputs.artifactory-username }} -PartifactoryAuthToken=${{ inputs.artifactory-auth-token }} ${{ inputs.gradlew-args }}
