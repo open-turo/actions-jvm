@@ -106,6 +106,7 @@ runs:
         echo "sha=$sha" >> $GITHUB_OUTPUT
 
     - uses: actions/checkout@v4
+      if: ${{ inputs.checkout-repo == 'true' }}
       with:
         fetch-depth: 0
         ref: ${{ steps.source-vars.outputs.branch }}
