@@ -4,6 +4,12 @@ description: <
   latest release. This will also generate a docker tag based on the computed version if the label `prerelease` is
   specified on the PR.
 inputs:
+  artifactory-auth-token:
+    required: true
+    description: Artifactory auth token usually secrets.ARTIFACTORY_AUTH_TOKEN
+  artifactory-username:
+    required: true
+    description: Artifactory user name usually secrets.ARTIFACTORY_USERNAME
   checkout-repo:
     required: false
     description: Perform checkout as first step of action
@@ -22,20 +28,15 @@ inputs:
   dockerhub-password:
     required: true
     description: password for dockerhub
-  github-token:
-    required: true
-    description: GitHub token that can checkout the repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN'
   extra-plugins:
     required: false
     description: Extra plugins for pre-install. You can also specify specifying version range for the extra plugins if you prefer.  Defaults to install @open-turo/semantic-release-config.
     default: |
       @open-turo/semantic-release-config
-  artifactory-username:
+  github-token:
     required: true
-    description: Artifactory user name usually secrets.ARTIFACTORY_USERNAME
-  artifactory-auth-token:
-    required: true
-    description: Artifactory auth token usually secrets.ARTIFACTORY_AUTH_TOKEN
+    description: GitHub token that can checkout the repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN'
+
 outputs:
   new-release-published:
     description: Whether a new release was published
