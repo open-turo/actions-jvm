@@ -52,6 +52,40 @@ steps:
         type=semver,pattern={{version}},value=${{ steps.release.outputs.new-release-version }}
 ```
 
+#### Dynamically input multiple build arguments and secrets:
+
+If you want to pass multiple build arguments and secrets, you can use the `build-args` and `secrets` input parameters.
+
+```yaml
+steps:
+  - uses: open-turo/actions-jvm/release@v3
+    name: Release
+    id: release
+    with:
+      checkout-repo: true
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+      dry-run: false
+  - uses: open-turo/actions-jvm/build-docker@v1
+    id: docker-build
+    with:
+      dockerhub-user: ${{ secrets.DOCKER_USERNAME }}
+      dockerhub-password: ${{ secrets.DOCKER_PASSWORD }}
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+      artifactory-username: ${{ secrets.ARTIFACTORY_USERNAME }}
+      artifactory-auth-token: ${{ secrets.ARTIFACTORY_AUTH_TOKEN }}
+      image-version: ${{ steps.release.outputs.new-release-version }}
+      build-args: |
+        KEY1=VALUE1
+        KEY2=VALUE2
+      secrets: |
+        SECRET_KEY1=SECRET_VALUE1
+        SECRET_KEY2=SECRET_VALUE2
+      docker-metadata-tags: |
+        type=ref,event=branch
+        type=ref,event=pr
+        type=semver,pattern={{version}},value=${{ steps.release.outputs.new-release-version }}
+```
+
 **IMPORTANT** : `GITHUB_TOKEN` does not have the required permissions to operate on protected branches.
 If you are using this action for protected branches, replace `GITHUB_TOKEN` with [Personal Access Token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line). If using the `@semantic-release/git` plugin for protected branches, avoid persisting credentials as part of `actions/checkout@v4` by setting the parameter `persist-credentials: false`. This credential does not have the required permission to operate on protected branches.
 
@@ -70,6 +104,10 @@ If you are using this action for protected branches, replace `GITHUB_TOKEN` with
 | image-version | Docker image version | `true` |  |
 | image-platform | Target platform to build image for (eg. linux/amd64 (default), linux/arm64, etc) | `false` | linux/amd64 |
 | docker-metadata-tags | 'List of tags as key-value pair attributes' See: https://github.com/docker/metadata-action#tags-input | `false` |  |
+| push | Do you want to push the image to the registry | `false` | true |
+| load | Do you want to load the single-platform build result to docker images | `false` | false |
+| build-args | List of build arguments as key-value pairs (e.g., KEY=VALUE) | `false` |  |
+| secrets | List of secrets as key-value pairs (e.g., SECRET_KEY=VALUE) | `false` |  |
 <!-- action-docs-inputs -->
 
 <!-- action-docs-outputs -->
