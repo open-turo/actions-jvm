@@ -30,6 +30,22 @@ inputs:
   docker-metadata-tags:
     description: "'List of tags as key-value pair attributes' See: https://github.com/docker/metadata-action#tags-input"
     required: false
+  push:
+    required: false
+    default: true
+    description: Do you want to push the image to the registry
+  load:
+    required: false
+    default: false
+    description: Do you want to load the single-platform build result to docker images
+  build-args:
+    required: false
+    description: List of build arguments as key-value pairs (e.g., KEY=VALUE)
+    default: ""
+  secrets:
+    required: false
+    description: List of secrets as key-value pairs (e.g., SECRET_KEY=VALUE)
+    default: ""
 outputs:
   image-name:
     description: Docker image name
@@ -96,10 +112,13 @@ runs:
           VERSION=${{ inputs.image-version }}
           REVISION=${{ inputs.image-version }}
           BRANCH=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.branch'] }}
-        push: true
+          ${{ inputs.build-args }}
+        push: ${{ inputs.push }}
+        load: ${{ inputs.load }}
         tags: ${{ steps.config.outputs.image-name }}:${{ inputs.image-version }}
         labels: ${{ steps.meta.outputs.labels }}
         secrets: |
           ARTIFACTORY_USERNAME=${{ inputs.artifactory-username }}
           ARTIFACTORY_AUTH_TOKEN=${{ inputs.artifactory-auth-token }}
           GITHUB_TOKEN=${{ inputs.github-token }}
+          ${{ inputs.secrets }}
