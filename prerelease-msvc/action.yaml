@@ -147,7 +147,7 @@ runs:
 
     - name: Prerelease
       id: prerelease
-      uses: open-turo/actions-release/semantic-release@v4
+      uses: open-turo/actions-release/semantic-release@v5
       if: steps.check-pr.outputs.has_prerelease_label == 'true'
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
