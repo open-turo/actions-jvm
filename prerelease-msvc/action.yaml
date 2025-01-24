@@ -18,6 +18,10 @@ inputs:
     required: false
     description: Whether semantic-release should create a prerelease or do a dry run. This can be useful to set to true when a prerelease requires pushing artifacts semantic-release is in charge of generating
     default: "false"
+  docker-build:
+    required: false
+    description: set to false to skip docker build
+    default: "true"
   docker-config-file:
     required: false
     description: Path to the docker config file (defaults to .docker-config.json) Must contain imageName, may contain dockerfile.
@@ -28,6 +32,10 @@ inputs:
   dockerhub-password:
     required: true
     description: password for dockerhub
+  image-platform:
+    description: Target platform to build image for (eg. linux/amd64 (default), linux/arm64, etc)
+    required: false
+    default: linux/amd64
   extra-plugins:
     required: false
     description: Extra plugins for pre-install. You can also specify specifying version range for the extra plugins if you prefer.  Defaults to install @open-turo/semantic-release-config.
@@ -168,7 +176,7 @@ runs:
         echo "run-url=https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> "$GITHUB_OUTPUT"
 
     - uses: open-turo/actions-jvm/build-docker@v1
-      if: steps.prerelease.outputs.new-release-published == 'true'
+      if: steps.prerelease.outputs.new-release-published == 'true' && inputs.docker-build == 'true'
       id: build-docker
       with:
         dockerhub-user: ${{ inputs.dockerhub-user }}
@@ -177,6 +185,7 @@ runs:
         artifactory-username: ${{ inputs.artifactory-username }}
         artifactory-auth-token: ${{ inputs.artifactory-auth-token }}
         image-version: ${{ steps.vars.outputs.version }}
+        image-platform: ${{ inputs.image-platform }}
         docker-metadata-tags: |
           type=ref,event=branch
           type=ref,event=pr
