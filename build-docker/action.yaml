@@ -53,15 +53,13 @@ outputs:
   image-with-tag:
     description: Full image with tag - <image-name>:<image-version>
     value: ${{ steps.config.outputs.image-name }}:${{ inputs.image-version }}
+  digest:
+    description: The digest for the docker image
+    value: ${{ steps.docker-build.outputs.digest }}
 
 runs:
   using: composite
   steps:
-    - name: Dump GitHub context
-      shell: bash
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
     - id: config
       shell: bash
       run: |
@@ -80,8 +78,16 @@ runs:
         echo "docker-metadata-tags: ${{ inputs.docker-metadata-tags }}"
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      #    - name: Set up Docker Buildx
+      #      uses: docker/setup-buildx-action@v3
+      #      with:
+      #        version: v0.19.2
+      #    - name: Validate Docker Environment
+      #      shell: bash
+      #      run: |
+      #        docker --version
+      #        docker buildx version
+      #        docker info
     - name: Login to Docker Hub
       uses: docker/login-action@v3
       with:
@@ -99,6 +105,9 @@ runs:
           ${{ inputs.image-tags }}
     - name: Build and push
       uses: docker/build-push-action@v6
+      id: docker-build
+      env:
+        ACTIONS_STEP_DEBUG: true
       with:
         context: .
         platforms: ${{ inputs.image-platform }}
@@ -122,3 +131,15 @@ runs:
           ARTIFACTORY_AUTH_TOKEN=${{ inputs.artifactory-auth-token }}
           GITHUB_TOKEN=${{ inputs.github-token }}
           ${{ inputs.secrets }}
+
+    - shell: bash
+      run: |
+        echo "imageid: ${{ steps.docker-build.outputs.imageid }}"
+
+    - shell: bash
+      run: |
+        echo "digest: ${{ steps.docker-build.outputs.digest }}"
+
+    - shell: bash
+      run: |
+        echo "metadata: ${{ steps.docker-build.outputs.metadata }}"
