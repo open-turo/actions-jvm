@@ -29,7 +29,7 @@ runs:
       uses: actions/checkout@v4
       if: inputs.checkout-repo == 'true'
     - name: Setup tools
-      uses: open-turo/action-setup-tools@v1
+      uses: open-turo/action-setup-tools@v3
     - name: Test
       env:
         JAVA_HOME: ${{ env.JAVA_HOME }}
