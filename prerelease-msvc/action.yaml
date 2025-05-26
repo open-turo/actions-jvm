@@ -182,16 +182,34 @@ runs:
           type=ref,event=pr
           type=semver,pattern={{version}},value=${{ steps.vars.outputs.version }}
 
+    - uses: open-turo/actions-jvm/build-docker@v1
+      if: steps.prerelease.outputs.new-release-published == 'true'
+      id: build-arm-docker
+      with:
+        dockerhub-user: ${{ inputs.dockerhub-user }}
+        dockerhub-password: ${{ inputs.dockerhub-password }}
+        github-token: ${{ inputs.github-token }}
+        artifactory-username: ${{ inputs.artifactory-username }}
+        artifactory-auth-token: ${{ inputs.artifactory-auth-token }}
+        image-version: ${{ steps.vars.outputs.version }}
+        image-platform: linux/arm64
+        docker-metadata-tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=semver,pattern={{version}},value=${{ steps.vars.outputs.version }}
+
     - name: Add new version to summary
       shell: bash
       if: steps.prerelease.outputs.new-release-published == 'true'
       env:
         NEW_VERSION: ${{ steps.vars.outputs.version }}
         DOCKER_IMAGE: ${{ steps.build-docker.outputs.image-with-tag }}
+        DOCKER_IMAGE_ARM: ${{ steps.build-arm-docker.outputs.image-with-tag }}
       run: |
         echo "::notice::new version: \`${NEW_VERSION}\`"
         echo "#### New version: \`${NEW_VERSION}\`" >> $GITHUB_STEP_SUMMARY
         echo "#### Docker image: \`${DOCKER_IMAGE}\`" >> $GITHUB_STEP_SUMMARY
+        echo "#### Docker image: \`${DOCKER_IMAGE_ARM}\`" >> $GITHUB_STEP_SUMMARY
 
     - name: Add no new version to summary
       shell: bash
@@ -227,5 +245,6 @@ runs:
 
           **Build version:** `${{ steps.vars.outputs.version }}`
           **Docker image:** `${{ steps.build-docker.outputs.image-with-tag }}`
+          **Docker image ARM:** `${{ steps.build-arm-docker.outputs.image-with-tag }}`
 
           [Build output](${{ steps.vars.outputs.run-url }})
