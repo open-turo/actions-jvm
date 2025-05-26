@@ -22,6 +22,9 @@ runs:
       if: inputs.checkout-repo == 'true'
       with:
         fetch-depth: 0
+    - name: Setup tools
+      # Provide opportunity to install terraform, golang, and others
+      uses: open-turo/action-setup-tools@v3
     - name: Pre-commit
       uses: open-turo/action-pre-commit@v3
       env:
