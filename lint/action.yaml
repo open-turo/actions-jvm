@@ -35,6 +35,8 @@ runs:
       with:
         github-token: ${{ inputs.github-token }}
         checkout-repo: true
+        extra-plugins: |
+          @open-turo/semantic-release-config@8.2.0
       env:
         ORG_GRADLE_PROJECT_artifactoryUsername: ${{ inputs.artifactory-auth-token }}
         ORG_GRADLE_PROJECT_artifactoryAuthToken: ${{ inputs.artifactory-auth-token }}
