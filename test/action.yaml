@@ -35,7 +35,4 @@ runs:
         JAVA_HOME: ${{ env.JAVA_HOME }}
       shell: bash
       run: |
-        sdk current
-        sdk env
-        sdk current
         ./gradlew ${{ inputs.gradle-task }} -PartifactoryUsername=${{ inputs.artifactory-username }} -PartifactoryAuthToken=${{ inputs.artifactory-auth-token }} ${{ inputs.gradlew-args }}
