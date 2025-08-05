@@ -27,6 +27,8 @@ runs:
       uses: open-turo/action-setup-tools@v3
     - name: Pre-commit
       uses: open-turo/action-pre-commit@v3
+      with:
+        github-token: ${{ inputs.github-token }}
       env:
         ORG_GRADLE_PROJECT_artifactoryUsername: ${{ inputs.artifactory-username }}
         ORG_GRADLE_PROJECT_artifactoryAuthToken: ${{ inputs.artifactory-auth-token }}
