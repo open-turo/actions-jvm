@@ -36,6 +36,10 @@ inputs:
   github-token:
     required: true
     description: GitHub token that can checkout the repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN'
+  image-platform:
+    description: Target platform(s) to build image for (eg. linux/amd64 for single platform, or linux/amd64,linux/arm64 for multi-platform)
+    required: false
+    default: linux/amd64
 
 outputs:
   new-release-published:
@@ -177,6 +181,7 @@ runs:
         artifactory-username: ${{ inputs.artifactory-username }}
         artifactory-auth-token: ${{ inputs.artifactory-auth-token }}
         image-version: ${{ steps.vars.outputs.version }}
+        image-platform: ${{ inputs.image-platform }}
         docker-metadata-tags: |
           type=ref,event=branch
           type=ref,event=pr

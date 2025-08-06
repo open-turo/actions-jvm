@@ -52,6 +52,33 @@ steps:
         type=semver,pattern={{version}},value=${{ steps.release.outputs.new-release-version }}
 ```
 
+#### Multi-Platform Build:
+
+```yaml
+steps:
+  - uses: open-turo/actions-jvm/release@v3
+    name: Release
+    id: release
+    with:
+      checkout-repo: true
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+      dry-run: false
+  - uses: open-turo/actions-jvm/build-docker@v1
+    id: docker-build
+    with:
+      dockerhub-user: ${{ secrets.DOCKER_USERNAME }}
+      dockerhub-password: ${{ secrets.DOCKER_PASSWORD }}
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+      artifactory-username: ${{ secrets.ARTIFACTORY_USERNAME }}
+      artifactory-auth-token: ${{ secrets.ARTIFACTORY_AUTH_TOKEN }}
+      image-version: ${{ steps.release.outputs.new-release-version }}
+      image-platform: linux/amd64,linux/arm64
+      docker-metadata-tags: |
+        type=ref,event=branch
+        type=ref,event=pr
+        type=semver,pattern={{version}},value=${{ steps.release.outputs.new-release-version }}
+```
+
 #### Dynamically input multiple build arguments and secrets:
 
 If you want to pass multiple build arguments and secrets, you can use the `build-args` and `secrets` input parameters.
@@ -102,7 +129,7 @@ If you are using this action for protected branches, replace `GITHUB_TOKEN` with
 | artifactory-username | Artifactory user name usually secrets.ARTIFACTORY_USERNAME | `true` |  |
 | artifactory-auth-token | Artifactory auth token usually secrets.ARTIFACTORY_AUTH_TOKEN | `true` |  |
 | image-version | Docker image version | `true` |  |
-| image-platform | Target platform to build image for (eg. linux/amd64 (default), linux/arm64, etc) | `false` | linux/amd64 |
+| image-platform | Target platform(s) to build image for (eg. linux/amd64 for single platform, or linux/amd64,linux/arm64 for multi-platform) | `false` | linux/amd64 |
 | docker-metadata-tags | 'List of tags as key-value pair attributes' See: https://github.com/docker/metadata-action#tags-input | `false` |  |
 | push | Do you want to push the image to the registry | `false` | true |
 | load | Do you want to load the single-platform build result to docker images | `false` | false |
