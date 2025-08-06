@@ -18,12 +18,33 @@
 
 ## Usage
 
+### Basic Usage
+
 ```yaml
 steps:
   - name: Action semantic release
     uses: open-turo/actions-jvm/prerelease-msvc@v1
     with:
       github-token: ${{ secrets.GITHUB_TOKEN }}
+      dockerhub-user: ${{ secrets.DOCKER_USERNAME }}
+      dockerhub-password: ${{ secrets.DOCKER_PASSWORD }}
+      artifactory-username: ${{ secrets.ARTIFACTORY_USERNAME }}
+      artifactory-auth-token: ${{ secrets.ARTIFACTORY_AUTH_TOKEN }}
+```
+
+### Multi-Platform Build
+
+```yaml
+steps:
+  - name: Action semantic release
+    uses: open-turo/actions-jvm/prerelease-msvc@v1
+    with:
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+      dockerhub-user: ${{ secrets.DOCKER_USERNAME }}
+      dockerhub-password: ${{ secrets.DOCKER_PASSWORD }}
+      artifactory-username: ${{ secrets.ARTIFACTORY_USERNAME }}
+      artifactory-auth-token: ${{ secrets.ARTIFACTORY_AUTH_TOKEN }}
+      image-platform: linux/amd64,linux/arm64
 ```
 
 **IMPORTANT**: `GITHUB_TOKEN` does not have the required permissions to operate on protected branches.
@@ -48,6 +69,7 @@ required permission to operate on protected branches.
 | extra-plugins | Extra plugins for pre-install. You can also specify specifying version range for the extra plugins if you prefer.  Defaults to install @open-turo/semantic-release-config. | `false` | @open-turo/semantic-release-config  |
 | artifactory-username | Artifactory user name usually secrets.ARTIFACTORY_USERNAME | `true` |  |
 | artifactory-auth-token | Artifactory auth token usually secrets.ARTIFACTORY_AUTH_TOKEN | `true` |  |
+| image-platform | Target platform(s) to build image for (eg. linux/amd64 for single platform, or linux/amd64,linux/arm64 for multi-platform) | `false` | linux/amd64 |
 <!-- action-docs-inputs -->
 
 <!-- action-docs-outputs -->
