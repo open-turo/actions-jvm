@@ -42,7 +42,7 @@ runs:
         persist-credentials: false
     - name: Setup tools
       uses: open-turo/action-setup-tools@v3
-    - uses: 8BitJonny/gh-get-current-pr@3.0.0
+    - uses: 8BitJonny/gh-get-current-pr@4.0.0
       id: PR
       with:
         sha: ${{ github.event.pull_request.head.sha }}
