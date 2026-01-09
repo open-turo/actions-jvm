@@ -22,6 +22,10 @@ inputs:
     required: false
     description: Path to the docker config file (defaults to .docker-config.json) Must contain imageName, may contain dockerfile.
     default: .docker-config.json
+  docker-secrets:
+    required: false
+    description: List of secrets as key-value pairs (e.g., SECRET_KEY=VALUE) to pass to the docker build.
+    default: ""
   dockerhub-user:
     required: true
     description: username for dockerhub
@@ -186,6 +190,7 @@ runs:
           type=ref,event=branch
           type=ref,event=pr
           type=semver,pattern={{version}},value=${{ steps.vars.outputs.version }}
+        secrets: ${{ inputs.docker-secrets }}
 
     - name: Add new version to summary
       shell: bash
