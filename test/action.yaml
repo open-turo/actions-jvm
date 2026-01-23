@@ -22,6 +22,10 @@ inputs:
     required: false
     description: An optional string of command line arguments to pass to gradlew. e.g. "--debug"
     default: ""
+  gradle-cache-enabled:
+    required: false
+    description: Whether to enable Gradle caching via gradle/actions/setup-gradle
+    default: "true"
 runs:
   using: composite
   steps:
@@ -30,6 +34,9 @@ runs:
       if: inputs.checkout-repo == 'true'
     - name: Setup tools
       uses: open-turo/action-setup-tools@v3
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v5
+      if: inputs.gradle-cache-enabled == 'true'
     - name: Test
       env:
         JAVA_HOME: ${{ env.JAVA_HOME }}
