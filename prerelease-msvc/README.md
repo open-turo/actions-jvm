@@ -70,6 +70,7 @@ required permission to operate on protected branches.
 | artifactory-username | Artifactory user name usually secrets.ARTIFACTORY_USERNAME | `true` |  |
 | artifactory-auth-token | Artifactory auth token usually secrets.ARTIFACTORY_AUTH_TOKEN | `true` |  |
 | image-platform | Target platform(s) to build image for (eg. linux/amd64 for single platform, or linux/amd64,linux/arm64 for multi-platform) | `false` | linux/amd64 |
+| gradle-cache-enabled | Whether to enable Gradle caching via gradle/actions/setup-gradle | `false` | true |
 <!-- action-docs-inputs -->
 
 <!-- action-docs-outputs -->
@@ -124,3 +125,5 @@ jobs:
 ## Notes
 
 - By default, this action will perform actions/checkout as its first step.
+- This action uses [gradle/actions/setup-gradle](https://github.com/gradle/actions/blob/main/docs/setup-gradle.md) for Gradle dependency caching to improve build performance.
+- Repositories using this action are expected to include a Gradle wrapper (`gradlew` and `gradle/wrapper/`) in their codebase.

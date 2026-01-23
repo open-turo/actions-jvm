@@ -14,6 +14,10 @@ inputs:
   artifactory-auth-token:
     required: true
     description: Authentication token to use with username for Artifactory access
+  gradle-cache-enabled:
+    required: false
+    description: Whether to enable Gradle caching via gradle/actions/setup-gradle
+    default: "true"
 runs:
   using: composite
   steps:
@@ -25,6 +29,9 @@ runs:
     - name: Setup tools
       # Provide opportunity to install terraform, golang, and others
       uses: open-turo/action-setup-tools@v3
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v5
+      if: inputs.gradle-cache-enabled == 'true'
     - name: Pre-commit
       uses: open-turo/action-pre-commit@v3
       with:

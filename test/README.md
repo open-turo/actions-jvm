@@ -44,6 +44,18 @@ jobs:
           gradle-task: integrationTest
 ```
 
+### Disabling Gradle cache
+
+```yaml
+jobs:
+  test:
+    steps:
+      - name: Test
+        uses: open-turo/actions-jvm/test@v1
+        with:
+          gradle-cache-enabled: false
+```
+
 <!-- prettier-ignore-start -->
 <!-- action-docs-inputs -->
 ## Inputs
@@ -56,6 +68,7 @@ jobs:
 | artifactory-auth-token | Authentication token to use with username for Artifactory access | `true` |  |
 | gradle-task | An optional string for the gradle test task to run. e.g. "integrationTest" | `false` | test |
 | gradlew-args | An optional string of command line arguments to pass to gradlew. e.g. "--debug" | `false` |  |
+| gradle-cache-enabled | Whether to enable Gradle caching via gradle/actions/setup-gradle | `false` | true |
 <!-- action-docs-inputs -->
 
 <!-- action-docs-outputs -->
@@ -84,3 +97,5 @@ gradelw test -PartifactoryUsername=?? -PartifactoryAuthToken=??
 ## Notes
 
 - By default, this action will perform actions/checkout as its first step.
+- This action uses [gradle/actions/setup-gradle](https://github.com/gradle/actions/blob/main/docs/setup-gradle.md) for Gradle dependency caching to improve build performance.
+- Repositories using this action are expected to include a Gradle wrapper (`gradlew` and `gradle/wrapper/`) in their codebase.

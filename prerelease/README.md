@@ -45,6 +45,7 @@ required permission to operate on protected branches.
 | extra-plugins | Extra plugins for pre-install. You can also specify specifying version range for the extra plugins if you prefer. Defaults to install @open-turo/semantic-release-config. | `false` | @open-turo/semantic-release-config  |
 | artifactory-username | Artifactory user name usually secrets.ARTIFACTORY_USERNAME | `true` |  |
 | artifactory-auth-token | Artifactory auth token usually secrets.ARTIFACTORY_AUTH_TOKEN | `true` |  |
+| gradle-cache-enabled | Whether to enable Gradle caching via gradle/actions/setup-gradle | `false` | true |
 <!-- action-docs-inputs -->
 
 <!-- action-docs-outputs -->
@@ -98,3 +99,5 @@ jobs:
 
 - By default, this action will perform actions/checkout as its first step.
 - Unlike prerelease-msvc, this action doesn't include Docker functionality.
+- This action uses [gradle/actions/setup-gradle](https://github.com/gradle/actions/blob/main/docs/setup-gradle.md) for Gradle dependency caching to improve build performance.
+- Repositories using this action are expected to include a Gradle wrapper (`gradlew` and `gradle/wrapper/`) in their codebase.

@@ -29,6 +29,8 @@ This action runs the following lint checks:
 
 - By default, this action will perform actions/checkout as its first step.
 - This expects that `.commitlintrc.yaml` will be present to enforce [`conventional-commit`](https://github.com/wagoid/commitlint-github-action).
+- This action uses [gradle/actions/setup-gradle](https://github.com/gradle/actions/blob/main/docs/setup-gradle.md) for Gradle dependency caching to improve build performance.
+- Repositories using this action are expected to include a Gradle wrapper (`gradlew` and `gradle/wrapper/`) in their codebase if they use Gradle.
 
 <!-- prettier-ignore-start -->
 <!-- action-docs-inputs -->
@@ -40,6 +42,7 @@ This action runs the following lint checks:
 | github-token | GitHub token that can checkout the repository. e.g. 'secrets.GITHUB_TOKEN' | `true` |  |
 | artifactory-username | Username to use for Artifactory access | `true` |  |
 | artifactory-auth-token | Authentication token to use with username for Artifactory access | `true` |  |
+| gradle-cache-enabled | Whether to enable Gradle caching via gradle/actions/setup-gradle | `false` | true |
 <!-- action-docs-inputs -->
 
 <!-- action-docs-outputs -->
