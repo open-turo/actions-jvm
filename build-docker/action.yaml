@@ -84,7 +84,7 @@ runs:
         echo "image-platform: $IMAGE_PLATFORM"
         echo "docker-metadata-tags: $DOCKER_METADATA_TAGS"
     - name: Set up QEMU
-      uses: docker/setup-qemu-action@v3
+      uses: docker/setup-qemu-action@v4
       with:
         platforms: ${{ inputs.image-platform }}
         # The latest version will lead to segmentation fault. Ref: https://github.com/docker/setup-qemu-action/issues/201
