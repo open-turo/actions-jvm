@@ -133,7 +133,7 @@ runs:
       if: steps.check-pr.outputs.has_prerelease_label == 'true'
 
     - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v5
+      uses: gradle/actions/setup-gradle@v6
       if: steps.check-pr.outputs.has_prerelease_label == 'true' && inputs.gradle-cache-enabled == 'true'
 
     - name: Prerelease
