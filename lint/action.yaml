@@ -30,7 +30,7 @@ runs:
       # Provide opportunity to install terraform, golang, and others
       uses: open-turo/action-setup-tools@v3
     - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v5
+      uses: gradle/actions/setup-gradle@v6
       if: inputs.gradle-cache-enabled == 'true'
     - name: Pre-commit
       uses: open-turo/action-pre-commit@v3
