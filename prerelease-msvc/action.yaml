@@ -118,7 +118,7 @@ runs:
         echo "sha=$sha"
         echo "sha=$sha" >> $GITHUB_OUTPUT
 
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       if: ${{ inputs.checkout-repo == 'true' }}
       with:
         fetch-depth: 0
